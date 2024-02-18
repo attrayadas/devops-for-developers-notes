@@ -1,8 +1,11 @@
 # 📚 Devops for Developers Notes - Java Techie #
-- - - -
 
-## Basic Introduction and Getting Started with Jenkins | Installation Guide - ___18 Feb 2024___
-- - - -
+## Index:
+1. [Basic Introduction and Getting Started with Jenkins - ___18 Feb 2024___](#heading-1 "Basic Introduction and Getting Started with Jenkins - ___18 Feb 2024___")
+
+
+## Basic Introduction and Getting Started with Jenkins - ___18 Feb 2024___
+
 ### Simple flow (Manual approach) ###
 
 - we write code -> store it in version control (GitHub) -> host in any cloud infrastructure- deploy the artifact (AWS, Azure, GCP)
