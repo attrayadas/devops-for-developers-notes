@@ -52,7 +52,7 @@ https://medium.com/@javatechie/jenkins-installation-steps-in-windows-mac-os-fcdc
 
 ### CI/CD: ###
 ```
-				     Jenkins pipeline
+	                    Jenkins pipeline
   	            ------------------------------------
  CODE -> GITHUB -> [CLEAN, BUILD, TEST, SCAN] -> DEPLOY
                     ------------------------     ------
