@@ -2,6 +2,8 @@
 
 ## Index:
 1. [Basic Introduction and Getting Started with Jenkins - ___18 Feb 2024___](#heading-1 "Basic Introduction and Getting Started with Jenkins - ___18 Feb 2024___")
+2. [Jenkins Installation Guide for Windows and Mac - ___24 Feb 2024___](#heading-1 "Jenkins Installation Guide for Windows and Mac - ___24 Feb 2024___")
+
 
 
 ## Basic Introduction and Getting Started with Jenkins - ___18 Feb 2024___
@@ -42,3 +44,22 @@
   **Continuous Delivery Deployment:** Release(V1) -> Deploy
 
 <img src="assets/CI-CD.PNG" alt="ci cd" style="width: 60%;">
+
+## Jenkins Installation Guide for Windows and Mac - ___24 Feb 2024___
+
+### Installation Guide: ###
+https://medium.com/@javatechie/jenkins-installation-steps-in-windows-mac-os-fcdc34b930c3
+
+### CI/CD: ###
+```
+				     Jenkins pipeline
+  	            ------------------------------------
+ CODE -> GITHUB -> [CLEAN, BUILD, TEST, SCAN] -> DEPLOY
+                    ------------------------     ------
+                              CI                   CD
+                    ------------------------------------
+```
+
+- We need to create a pipeline to perform the whole CI/CD we call it Jenkins pipeline
+
+- Pipeline: To execute sequence of action (both CI and CD)
