@@ -1,12 +1,12 @@
 # 📚 Devops for Developers Notes - Java Techie #
 
 ## Index:
-| No. | Session                                                       | Date         | Category |
-|-----|---------------------------------------------------------------|--------------|----------|
-| 1   | Basic Introduction and Getting Started with Jenkins           | 18 Feb, 2024 | Jenkins  |
-| 2   | Jenkins Installation Guide for Windows and Mac                | 24 Feb, 2024 | Jenkins  |
-| 3   | Jenkins CI/CD Flow with Example using Configuration Approach  | 25 Feb, 2024 | Jenkins  |
-
+| No. | Session                                                      | Date         | Category |
+|-----|--------------------------------------------------------------|--------------|----------|
+| 1   | Basic Introduction and Getting Started with Jenkins          | 18 Feb, 2024 | Jenkins  |
+| 2   | Jenkins Installation Guide for Windows and Mac               | 24 Feb, 2024 | Jenkins  |
+| 3   | Jenkins CI/CD Flow with Example using Configuration Approach | 25 Feb, 2024 | Jenkins  |
+| 4   | Jenkins CI/CD Flow with Example using Declarative Approach   | 02 Mar, 2024 | Jenkins  |
 
 ## ▶ Basic Introduction and Getting Started with Jenkins - ___18 Feb 2024___
 
@@ -144,3 +144,92 @@ Where do Jenkins store the war?
 12. Select Test configuration by sending test e-mail, and add an email
 13. Save
 14. Now for every failed build, it will trigger the mail (you can find in the console itself)
+
+
+## ▶ Jenkins CI/CD Flow with Example using Declarative Approach - ___02 Mar 2024___
+
+1. Last class we saw how to use UI to automate CI & CD
+2. Declarative approach is the best practice using script to automate the CI & CD
+3. Create new pipeline > jenkins-second-demo > select Pipeline > OK
+4. Now we will get only three option: General, Advanced Options, Pipeline
+5. Go to Build Trigger: Select Poll SCM: * * * * * (every minute)
+6. We won't get build step or post build step as we wil be using script
+7. Go to Pipeline: Definition: Pipeline script, Select: GitHub + Maven
+8. Script uses Groovy (no prior knowledge required)
+9. Stages: group of action ; Stage: action
+
+eg: 
+```
+// stage 1: scm checkout
+// stage 2: build (till here CI)
+// stage 3: deploy WAR (CD)
+// stage 4: email (not a part of CI CD)
+```
+```
+pipeline{
+
+    agent any
+    tools{
+        maven "maven"
+    }
+    stages{
+
+        stage("SCM checkout"){
+            steps{
+                checkout scmGit(branches: [[name: '/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/javatechie-devops/jenkins-ci-cd.git']])
+            }
+        }
+
+        stage("Build Process"){
+            steps{
+                script{
+                    sh 'mvn clean install'
+                }
+            }
+        }
+
+        stage("Deploy to Container"){
+            steps{
+                deploy adapters: [tomcat9(credentialsId: 'tomcat-pwd', path: '', url: 'http://localhost:9090/')], contextPath: 'jenkinsCiCd', war: '**/.war'
+            }
+        }
+
+    }
+
+    post{
+        always{
+            emailext attachLog: true, 
+            body: ''' <html>
+                        <body>
+                            <p>Build Status: ${BUILD_STATUS}</p>
+                            <p>Build Number: ${BUILD_NUMBER}</p>
+                            <p>Check the <a href="${BUILD_URL}">console output</a>.</p>
+                        </body>
+                      </html>''', 
+            mimeType: 'text/html', 
+            replyTo: 'javatechie.learning@gmail.com', 
+            subject: 'Pipeline Status : ${BUILD_NUMBER}', 
+            to: 'javatechie.learning@gmail.com'
+
+        }
+    }
+}
+```
+
+### You can click Pipeline Syntax for help in groovy: ###
+-  Select checkout from version control > give details > Generate Pipeline script > Copy the code generated 
+- Select Deploy war/ear to container > WAR/EAR: **/*.war ; Context path: jenkinsCiCd; Credentials : admin/**** ; Tomcat URL: http://localhost:9090 > Generate the pipeline script > Copy the code generated
+- Same process can be done for email as well
+
+10. Save it
+11. Build will start automatically
+12. We need not define separate stage for Notification as it doesn't come under CI/CD (it will come in Post)
+```
+To send a email for every build:
+System > Extended Email Notification > Select always from a drop down menu
+```
+
+###  In general practice, we don't write the groovy script from the Jenkins. We attach the script with the code itself (filename: JenkinsFile)
+1. Create jenkins-third-demo
+2. Select Pipeline project and select OK
+3. Select Pipeline script from SCM
