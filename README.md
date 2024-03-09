@@ -1,12 +1,13 @@
 # 📚 Devops for Developers Notes - Java Techie #
 
 ## Index:
-| No. | Session                                                      | Date         | Category |
-|-----|--------------------------------------------------------------|--------------|----------|
-| 1   | Basic Introduction and Getting Started with Jenkins          | 18 Feb, 2024 | Jenkins  |
-| 2   | Jenkins Installation Guide for Windows and Mac               | 24 Feb, 2024 | Jenkins  |
-| 3   | Jenkins CI/CD Flow with Example using Configuration Approach | 25 Feb, 2024 | Jenkins  |
-| 4   | Jenkins CI/CD Flow with Example using Declarative Approach   | 02 Mar, 2024 | Jenkins  |
+| No. | Session                                                                | Date         | Category |
+|-----|------------------------------------------------------------------------|--------------|----------|
+| 1   | Basic Introduction and Getting Started with Jenkins                    | 18 Feb, 2024 | Jenkins  |
+| 2   | Jenkins Installation Guide for Windows and Mac                         | 24 Feb, 2024 | Jenkins  |
+| 3   | Jenkins CI/CD Flow with Example using Configuration Approach           | 25 Feb, 2024 | Jenkins  |
+| 4   | Jenkins CI/CD Flow with Example using Declarative Approach             | 02 Mar, 2024 | Jenkins  |
+| 5   | Docker Introduction & getting started with Docker - Installation guide | 09 Mar, 2024 | Docker   |
 
 ## ▶ Basic Introduction and Getting Started with Jenkins - ___18 Feb 2024___
 
@@ -223,7 +224,7 @@ pipeline{
 
 10. Save it
 11. Build will start automatically
-12. We need not define separate stage for Notification as it doesn't come under CI/CD (it will come in Post)
+12. We need to not define a separate stage for Notification as it doesn't come under CI/CD (it will come in Post)
 ```
 To send a email for every build:
 System > Extended Email Notification > Select always from a drop down menu
@@ -233,3 +234,81 @@ System > Extended Email Notification > Select always from a drop down menu
 1. Create jenkins-third-demo
 2. Select Pipeline project and select OK
 3. Select Pipeline script from SCM
+
+## ▶ Docker Introduction & getting started with Docker | Installation guide - ___09 Mar 2024___
+
+- According to docker.com: Docker helps developers build, share, run, and verify applications anywhere — without tedious environment configuration or management.
+- Docker helps to build, run, deploy and verify your code
+
+### Why do we need Docker?
+
+```Check the diagrams under class notes directory (Docker_x_9-mar)```
+
+#### Example 1:
+
+For creating e-commerce application we need:
+1. Java 8
+2. Spring Boot 3.x
+3. MongoDB 4.x
+4. Angular 8
+5. Kafka 2.7
+
+Now if someone asks for the code, one needs to push the code to GitHub. However, another developer might not be able to run the application as the other developer might not have the required dependency or incompatible
+(Java 8, Kafka, etc.)
+
+**Solution:** What if we package all the dependencies and share to others. This packaging is the solution. Docker will do this packaging.
+So Docker will take all the dependencies and it will create an image. The other developer can take the image and clone it and run it
+
+#### Example 2:
+
+- A team of three people are developing the same ecommerce application with the same dependencies as above in year 2021
+- Now we need to deploy the application to a server, 
+- So we purchased a server after 3 years
+- Now, if I deploy the application after 3 years, will the application work?
+- The server might have Kafka 3.x version, etc. (dependency version mismatch or Jar conflict corrupted)
+
+**Solution:** Docker can package the entire application, i.e., it will create an image. When I deploy in the future, I will have all the required dependencies. (Even if the server does not have anything installed)
+
+#### Example 3:
+
+- Let's suppose a developer has created an application with MySQL8, and it went to testing
+- When code went to a testing team, they are using MySQL5. 
+- Will the code work in testing? Maybe or maybe not
+
+Why can't we run the application in an isolation manner? I.e., wherever we go the application runs
+If what dependency the dev is using, the same dependency testing team is using
+
+**Possible solution:** I can share my OS and pieces of software and my application so that my application runs in all environment
+But we can't share my operating system to someone else
+
+**Solution using Docker:** I will create an image, and I will share the image to the testing team
+
+### How were things used before Docker?
+
+- Server needs to be purchased with some configuration (RAM, HDD, CPU)
+- Initially the load was less, but later the traffic increased in where the present server will be unable to run the application
+- Now they will buy another server
+- After sometime, **VMWare** was launched. It provided a mechanism called VMWare Work Station which can allow to run multiple OS is a single server
+- How VMWare Work Station works? Above the OS layer, it added another layer called "Hypervisor". This Hypervisor helps to create Virtual Machine (Virtualization). Now we can create different VMs. We can install OS on the VMs.
+- While creating these VMs, we need to assign configuration (e.g.: RAM) from the local machine
+- If the RAM is used up by VMs. we can't create another VM if no memory is left in local
+- Also, these VMs use their own OS (We need to take license)
+- Hypervisor will take the resources from local machine and distribute to VMs
+
+So the problem with this approach:
+- Resource is limited
+- Fixed memory size and not re-usable
+- Mandatory installation of OS
+
+To overcome these issues, here comes DOCKER
+- Docker is an advanced version of the above virtualization knows as Containerization
+- The configuration is almost the same as VMWare, but above our OS, instead of Hypervisor we have "Docker Engine"
+- Above Docker Engine, instead of VMs, we have Containers
+- We can deploy our apps here
+- To run any application, we need an operating system, so Docker will take help of the local Operating System.
+- Also, docker doesn't allocate memory to a container for a long time. Once done, docker will release the memory
+- These local machines are called Host Machine
+
+<img src="assets/docker-vmware.png" alt="docker-vmware difference" style="width: 60%;">
+
+Installation guide: https://medium.com/@javatechie/docker-installation-steps-in-windows-mac-os-b749fdddf73a
