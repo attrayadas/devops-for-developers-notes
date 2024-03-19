@@ -8,6 +8,7 @@
 | 3   | Jenkins CI/CD Flow with Example using Configuration Approach           | 25 Feb, 2024 | Jenkins  |
 | 4   | Jenkins CI/CD Flow with Example using Declarative Approach             | 02 Mar, 2024 | Jenkins  |
 | 5   | Docker Introduction & getting started with Docker - Installation guide | 09 Mar, 2024 | Docker   |
+| 6   | Dockerize Spring Boot Application - Understand Workflow                | 16 Mar, 2024 | Docker   |
 
 ## ▶ Basic Introduction and Getting Started with Jenkins - ___18 Feb 2024___
 
@@ -312,3 +313,96 @@ To overcome these issues, here comes DOCKER
 <img src="assets/docker-vmware.png" alt="docker-vmware difference" style="width: 60%;">
 
 Installation guide: https://medium.com/@javatechie/docker-installation-steps-in-windows-mac-os-b749fdddf73a
+
+
+## ▶ Dockerize Spring Boot Application - Understand Workflow - ___16 Mar 2024___
+
+## Dockerize your application steps
+<img src="assets/Dockerize App.PNG" alt="Dockerize your app" style="width: 50%;">
+
+Example:
+1. I have a java application
+2. To run java application, we need JDK (for compiling and running)
+3. To run JAR we need command: ```java -jar app.jar```
+
+- Can I instruct these informations to Docker? Yes, using Dockerfile
+- Using the Dockerfile it will create the image and using container, we can run it
+
+> Dockerfile is a simple file that contains instruction about your application. eg: How you will run your application?, What dependencies needed to run your application?
+
+## 1. Run a Simple Spring Boot Application using Docker
+1. Create a new Spring Boot project: spring-docker with dependency: spring-web
+2. Create an endpoint with Get Mapping
+3. Change the server.port=8282
+4. Build the application
+5. Now I want this application to be dockerize
+6. Create file: Dockerfile
+
+```
+FROM openjdk:17
+WORKDIR /appContainer    // It wil craete a directory on the container (optional). Else, all things will be stored in root directory
+COPY ./target/spring-docker.jar /appContainer
+EXPOSE 8282 			 // which port in container will the aplication run (keep it same as server.port)
+CMD ["java", "-jar", "spring-docker.jar"]
+```
+7. Start the docker engine (docker desktop)
+8. In the root directory, cmd: ```docker build -t spring-docker-app:1.0 .```. It will create an Image
+9. To verify, cmd: ```docker images```
+10. To run this particular docker image in docker container, cmd : ```docker run -d -p 9090:8282 spring-docker-app:1.0```. 9090 is the localhost, 8282 is the container port.
+11. To verify if the container started or not: ```docker ps```
+<img src="assets/docker ps.png" alt="docker ps command" style="width: 60%;">
+12. To see logs: ```docker logs <container id>```
+13. To execute bash command: ```docker exec -it <container id> /bin/bash```
+14. Now you can nevigate to the directory
+14. Now you can give a request to http://localhost:9090/greetings
+
+## 2. To use apps like kafka (or any third party library), we will be needing certificates: (01:05)
+- If my application is running on the container, my container must have those certificates with him
+1. Create a cert.txt in the root directory of the application
+2. Do these changes in the Dockerfile:
+```
+FROM openjdk:17
+WORKDIR /appContainer
+COPY cert.txt /appContainer/cert.txt
+COPY ./target/spring-docker.jar /appContainer
+EXPOSE 8282 
+CMD ["java", "-jar", "spring-docker.jar"]
+```
+
+To create a new image:
+1. build the application again (mvn clean install)
+2. Create an image: ```docker build -t spring-docker-app:2.0 .```
+3. To verify: ```docker images```
+4. To run: ```docker run -d -p 7070:8282 spring-docker-app:2.0```
+5. Use cmd: ```docker ps``` to confirm the container running
+6. Use cmd: ```docker exec -it 3a00ffd8779e /bin/bash``` to see the cert.txt present or not
+7. To see the logs: ```docker logs 3a00ffd8779e```
+
+## 3. Using Docker Commit
+- Now let's suppose we have to do some experiments in the container itself, but I don't want it to break. After doing the experiment, I don't want to touch the existing container, instead I want a new version with the new experiment changes. Basically, we modify a container and crearte another version of it.
+- app 2.0 ------> do experiments (success): patch file for PUBG game -------> app 3.0
+
+1. Add experimental changes in the code
+2. build jar
+3. create image
+4. run a new container
+
+Rather doing the above steps, docker can create a clone of the existing image as seperate image: Using docker commit
+
+### Steps:
+1. Go to the spring-docker-app:2.0
+2. Open bash command: ```docker exec -it 3a00ffd8779e /bin/bash```
+3. Do some changes: ```echo "index.hyml">index.html```
+4. You can find the new file in the appContainer directory of spring-docker-app:2.0
+5. But I don't want this new file to be there on the 2.0 container, rather I want to create a new container and clone this new change
+6. Use cmd: ```docker commit <2.0 container id> spring-docker-app:3.0```
+7. Use cmd: ```docker images``` to see a new 3.0 version of the application
+8. To stop the running container: ```docker stop 3a00ffd8779e```
+9. Now run the new docker image: ```docker run -d -p 9191:8282 spring-docker-app:3.0```
+10. Run the 2.0 app again: ```docker run -d -p 7070:8282 spring-docker-app:2.0```
+11. Now you won't be able to find the index.html on the 2.0 but will be there in the 3.0
+
+Docker Commands: https://github.com/basanta-spring-boot/documents/blob/main/docker-README.md
+
+### Assignment:
+Write a shell script/batch file which will create a folder called "logmon" in container on application startup and write all your application logs to that "logmon/application.log"
