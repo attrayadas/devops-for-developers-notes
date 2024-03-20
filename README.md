@@ -9,6 +9,7 @@
 | 4   | Jenkins CI/CD Flow with Example using Declarative Approach             | 02 Mar, 2024 | Jenkins  |
 | 5   | Docker Introduction & getting started with Docker - Installation guide | 09 Mar, 2024 | Docker   |
 | 6   | Dockerize Spring Boot Application - Understand Workflow                | 16 Mar, 2024 | Docker   |
+| 7   | Dockerize Spring Boot Application using Google JIB                     | 17 Mar, 2024 | Docker   |
 
 ## ▶ Basic Introduction and Getting Started with Jenkins - ___18 Feb 2024___
 
@@ -317,7 +318,7 @@ Installation guide: https://medium.com/@javatechie/docker-installation-steps-in-
 
 ## ▶ Dockerize Spring Boot Application - Understand Workflow - ___16 Mar 2024___
 
-## Dockerize your application steps
+### Dockerize your application steps
 <img src="assets/Dockerize App.PNG" alt="Dockerize your app" style="width: 50%;">
 
 Example:
@@ -330,7 +331,7 @@ Example:
 
 > Dockerfile is a simple file that contains instruction about your application. eg: How you will run your application?, What dependencies needed to run your application?
 
-## 1. Run a Simple Spring Boot Application using Docker
+### 1. Run a Simple Spring Boot Application using Docker
 1. Create a new Spring Boot project: spring-docker with dependency: spring-web
 2. Create an endpoint with Get Mapping
 3. Change the server.port=8282
@@ -356,7 +357,7 @@ CMD ["java", "-jar", "spring-docker.jar"]
 14. Now you can nevigate to the directory
 14. Now you can give a request to http://localhost:9090/greetings
 
-## 2. To use apps like kafka (or any third party library), we will be needing certificates: (01:05)
+### 2. To use apps like kafka (or any third party library), we will be needing certificates: (01:05)
 - If my application is running on the container, my container must have those certificates with him
 1. Create a cert.txt in the root directory of the application
 2. Do these changes in the Dockerfile:
@@ -378,7 +379,7 @@ To create a new image:
 6. Use cmd: ```docker exec -it 3a00ffd8779e /bin/bash``` to see the cert.txt present or not
 7. To see the logs: ```docker logs 3a00ffd8779e```
 
-## 3. Using Docker Commit
+### 3. Using Docker Commit
 - Now let's suppose we have to do some experiments in the container itself, but I don't want it to break. After doing the experiment, I don't want to touch the existing container, instead I want a new version with the new experiment changes. Basically, we modify a container and crearte another version of it.
 - app 2.0 ------> do experiments (success): patch file for PUBG game -------> app 3.0
 
@@ -402,7 +403,52 @@ Rather doing the above steps, docker can create a clone of the existing image as
 10. Run the 2.0 app again: ```docker run -d -p 7070:8282 spring-docker-app:2.0```
 11. Now you won't be able to find the index.html on the 2.0 but will be there in the 3.0
 
-Docker Commands: https://github.com/basanta-spring-boot/documents/blob/main/docker-README.md
+*Docker Commands:* https://github.com/basanta-spring-boot/documents/blob/main/docker-README.md
 
-### Assignment:
+#### Assignment:
 Write a shell script/batch file which will create a folder called "logmon" in container on application startup and write all your application logs to that "logmon/application.log"
+
+
+## ▶ Dockerize Spring Boot Application using Google JIB - ___17 Mar 2024___
+
+- Google Cloud team designed a plugin for Java application: Google JIB
+- It will help us create Docker Image without us taking extra effort of writing Dockerfile, or instructing the information to Docker or without starting the Docker daemon
+- Jib handles all steps of packaging your application into a container image. You don't need to know best practicEs for creating Dockerfiles or have Docker installed.
+<img src="assets/Google JIB.PNG" alt="Google JIB" style="width: 70%;">
+
+### Two different approaches to dockerize our application without using Dockerfile:
+1. Google JIB
+2. Cloud Native BuildPack (Spring Boot 2.3.x onwards)
+   We will understand these two approach. These two are helpful in quick testing, but not recommedned beyond Dev environment.
+
+### 1. Google JIB
+Will show how using Google JIB:
+Create Image -> Run the container with that particular image
+
+#### Steps:
+1. We need to add the Google JIB dependency (Firstly remove the Dockerfile):
+2. Add this plugin in the pom.xml:
+```
+<plugin>
+	<groupId>com.google.cloud.tools</groupId>
+	<artifactId>jib-maven-plugin</artifactId>
+	<version>3.2.1</version>
+	<configuration>
+		<to>spring-docker:5.0</to>
+	</configuration>
+</plugin>
+```
+3. Check ```mvn -v```
+4. ```mvn compile jib:dockerBuild``` (Make sure Docker Desktop is running, it is required initialy as we are not pushing to any registry)
+   (22:46
+5. Go to bash, and go to app/lib, you will find all the dependencies (28:33)
+
+### 2. Cloud Native BuildPack
+- Buildpack is something like magic box, that can figure out what kind of application you have, and it builds a container for you without looking at Dockerfile
+
+#### Steps:
+1. Comment the plugin added in the previous step, and do a mvn clean
+2. Now cmd: ```mvn spring-boot:build-image```
+3. It will create an image with tag name: 0.0.1-SNAPSHOT
+4. Now run the image: ```docker run -d -p 9191:8282 spring-docker-practice:0.0.1-SNAPSHOT```
+5. To give a customized name: ```mvn spring-boot:build-image -Dspring-boot.build-image.imageName=spring-docker-app:v2```
