@@ -10,6 +10,7 @@
 | 5   | Docker Introduction & getting started with Docker - Installation guide | 09 Mar, 2024 | Docker   |
 | 6   | Dockerize Spring Boot Application - Understand Workflow                | 16 Mar, 2024 | Docker   |
 | 7   | Dockerize Spring Boot Application using Google JIB                     | 17 Mar, 2024 | Docker   |
+| 8   | What is Docker Hub & How to push Docker image to Hub?                  | 23 Mar, 2024 | Docker   |
 
 ## ▶ Basic Introduction and Getting Started with Jenkins - ___18 Feb 2024___
 
@@ -452,3 +453,54 @@ Create Image -> Run the container with that particular image
 3. It will create an image with tag name: 0.0.1-SNAPSHOT
 4. Now run the image: ```docker run -d -p 9191:8282 spring-docker-practice:0.0.1-SNAPSHOT```
 5. To give a customized name: ```mvn spring-boot:build-image -Dspring-boot.build-image.imageName=spring-docker-app:v2```
+
+## ▶ What is Docker Hub & How to push Docker image to Hub? - ___23 Mar 2024___
+- Where Can i store Docker Image from where everyone can access? -> Docker Hub, AWS ECR, GitHub
+- **Docker Hub** is a registry to store your docker images
+
+### Steps to push images to Docker Hub:
+1. Create a Docker Hub account (sign up): https://hub.docker.com/
+2. Create Docker image*
+3. Then you can push your images to Docker hub
+4. Login to Docker Hub from cmd prompt: `docker login`
+5. Give the username and password when prompted (It will create a file called config.json, it will wrap this username and password and create one secret token)
+6. Tag your image with your username, cmd: `docker tag spring-docker-app:1.0 javatechie4u/spring-docker-app:1.0`
+7. Now when you do `docker images`, you can find another image with your image tagged
+8. Push image to Docker Hub: `docker push javatechie4u/spring-docker-app:1.0`
+9. Go to your Docker Hub -> Repositories: You can find the image here
+
+### Steps to pull images from Docker Hub:
+1. You can find the cmd to pull the image: `docker pull javatechie4u/spring-docker-app`
+2. To pull the image: use the cmd: `docker pull javatechie4u/spring-docker-app:1.0`
+3. You can find the image in `docker images` cmd
+4. To run, cmd: `docker run -d -p 9090:8282 javatechie4u/spring-docker-app:1.0`
+5. Send request to `localhost:9090` and you can see the application is running.
+
+*Steps to create Docker image:
+1. Create Dockerfile
+2. Build JAR: `mvn clean install`
+3. build docker images: `docker build -t spring-docker-app:1.0 .`
+
+* To use MongoDB, we can use Docker Hub to pull the image: **bitnami/mongodb** -> `docker pull bitnami/mongodb`
+* To use Kafka, we can use Docker Hub to pull the image: **bitnami/kafka** -> `docker pull bitnami/kafka`
+* To use MySQL, we can use Docker Hub to pull the image: **mysql** -> `docker pull mysql`
+
+#### Commands used today:
+```
+docker login
+
+docker tag spring-docker:1.0 javatechie/spring-docker:1.0
+
+docker push javatechie/spring-docker:1.0
+
+docker pull javatechie/spring-docker:1.0
+```
+
+* Next class will be:
+    * Earlier:
+      * **CI:** BUILD, TEST, GENERATE WAR
+      * **CD:** Deploy WAR to Tomcat
+
+    * From now on:
+      * **CI:** BUILD, TEST, Build docker image
+      * **CD:** Docker login, tag image, Push/Deploy image to Hub
