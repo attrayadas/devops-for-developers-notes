@@ -1,20 +1,21 @@
 # 📚 Devops for Developers Notes - Java Techie #
 
 ## Index:
-| No. | Session                                                                | Date         | Category |
-|-----|------------------------------------------------------------------------|--------------|----------|
-| 1   | Basic Introduction and Getting Started with Jenkins                    | 18 Feb, 2024 | Jenkins  |
-| 2   | Jenkins Installation Guide for Windows and Mac                         | 24 Feb, 2024 | Jenkins  |
-| 3   | Jenkins CI/CD Flow with Example using Configuration Approach           | 25 Feb, 2024 | Jenkins  |
-| 4   | Jenkins CI/CD Flow with Example using Declarative Approach             | 02 Mar, 2024 | Jenkins  |
-| 5   | Docker Introduction & getting started with Docker - Installation guide | 09 Mar, 2024 | Docker   |
-| 6   | Dockerize Spring Boot Application - Understand Workflow                | 16 Mar, 2024 | Docker   |
-| 7   | Dockerize Spring Boot Application using Google JIB                     | 17 Mar, 2024 | Docker   |
-| 8   | What is Docker Hub & How to push Docker image to Hub?                  | 23 Mar, 2024 | Docker   |
+| No. | Session                                                                            | Date         | Category |
+|-----|------------------------------------------------------------------------------------|--------------|----------|
+| 1   | [Basic Introduction and Getting Started with Jenkins](#jenkins1)                   | 18 Feb, 2024 | Jenkins  |
+| 2   | [Jenkins Installation Guide for Windows and Mac](#jenkins2)                        | 24 Feb, 2024 | Jenkins  |
+| 3   | [Jenkins CI/CD Flow with Example using Configuration Approach](#jenkins3)          | 25 Feb, 2024 | Jenkins  |
+| 4   | [Jenkins CI/CD Flow with Example using Declarative Approach](#jenkins4)            | 02 Mar, 2024 | Jenkins  |
+| 5   | [Docker Introduction & getting started with Docker - Installation guide](#docker1) | 09 Mar, 2024 | Docker   |
+| 6   | [Dockerize Spring Boot Application - Understand Workflow](#docker2)                | 16 Mar, 2024 | Docker   |
+| 7   | [Dockerize Spring Boot Application using Google JIB](#docker3)                     | 17 Mar, 2024 | Docker   |
+| 8   | [What is Docker Hub & How to push Docker image to Hub?](#docker4)                  | 23 Mar, 2024 | Docker   |
 
-## ▶ Basic Introduction and Getting Started with Jenkins - ___18 Feb 2024___
+<a name ="jenkins1"></a>
+# ▶ Basic Introduction and Getting Started with Jenkins - ___18 Feb 2024___
 
-### Simple flow (Manual approach) ###
+### Simple flow (Manual approach)
 
 - we write code -> store it in version control (GitHub) -> host in any cloud infrastructure- deploy the artifact (AWS, Azure, GCP)
 
@@ -30,7 +31,7 @@
 
 - Jenkins is an open-source automation server that facilitates the continuous integration and continuous delivery(CI/CD) of software. (automates ompilation, testing and deployment)
 
-### Why Jenkins? (Problems before Jenkins) ###
+### Why Jenkins? (Problems before Jenkins)
 
 - Manual Build and Deployment Processes
 - Lack of Automated Testing (Unit tests, Integration tests)
@@ -38,7 +39,7 @@
 - Deployment Challenges (deployment failure due to configuration mismatch)
 - Poor Visibility and Monitoring (No tracking, no startup logs)
 
-### What is CI/CD? ###
+### What is CI/CD?
 
 - Being a developer you only focus on development. Rest integration and deployment is taken care by Jenins
 
@@ -51,13 +52,13 @@
 
 <img src="assets/CI-CD.PNG" alt="ci cd" style="width: 60%;">
 
+<a name ="jenkins2"></a>
+# ▶ Jenkins Installation Guide for Windows and Mac - ___24 Feb 2024___
 
-## ▶ Jenkins Installation Guide for Windows and Mac - ___24 Feb 2024___
-
-### Installation Guide: ###
+### Installation Guide:
 https://medium.com/@javatechie/jenkins-installation-steps-in-windows-mac-os-fcdc34b930c3
 
-### CI/CD: ###
+### CI/CD:
 ```
 	                    Jenkins pipeline
   	            ------------------------------------
@@ -70,8 +71,8 @@ https://medium.com/@javatechie/jenkins-installation-steps-in-windows-mac-os-fcdc
 - We need to create a pipeline to perform the whole CI/CD we call it Jenkins pipeline
 - Pipeline: To execute sequence of action (both CI and CD)
 
-
-## ▶ Jenkins CI/CD Flow with Example using Configuration Approach - ___25 Feb 2024___
+<a name ="jenkins3"></a>
+# ▶ Jenkins CI/CD Flow with Example using Configuration Approach - ___25 Feb 2024___
 
 - In today's session, we will do CI/CD using the User Interface
 - Code -> GitHub -> (Now we need someone to validate the code) -> Here comes Jenkins (it will pull the code from GitHub and it will compile, test, build) -> Generate WAR file -> Deploy to external tomcat server and push notification (additional feature)
@@ -79,7 +80,7 @@ https://medium.com/@javatechie/jenkins-installation-steps-in-windows-mac-os-fcdc
 - Steps after that comes under Continuous Deployment (except push notification)
 - The developer's responsibility is till GitHub, after that Jenkins will take the responsibility
 
-### First Step: Continuous Integration using Jenkins: ###
+### First Step: Continuous Integration using Jenkins:
 1. Push the code to GitHub
 2. Login to Jenkins and create a job/pipeline
 3. Give a name and select Freestyle and click Ok
@@ -102,7 +103,7 @@ https://medium.com/@javatechie/jenkins-installation-steps-in-windows-mac-os-fcdc
 16. Click on Build now (You might have to change the branch to main instead of */master in configure) and it will build the maven project with "Build Success" message
 17. With this CI flow is done
 
-### Next Step: We need to generate the WAR and need to deploy the WAR to tomcat: ###
+### Next Step: We need to generate the WAR and need to deploy the WAR to tomcat:
 - To Start Tomcat server: Goto bin folder > execute startup.sh
 - Tomcat runs on 8080 by default, to change it, open conf > server.xml and change the connector port to 9090
 
@@ -122,7 +123,7 @@ https://medium.com/@javatechie/jenkins-installation-steps-in-windows-mac-os-fcdc
 13. In the logs, you will find "Attempting to deploy 1 war file(s)"
 14. Go to the Tomcat dashboard -> Manager App -> You will find /jenkinsCiCd
 
-### To change the WAR file name generated by Jenkins: ###
+### To change the WAR file name generated by Jenkins:
 1. In pom.xml, inside <build>, add another attribute <finalName>jenkinsCiCd</finalName>
 2. Commit and push to remote repository (Ctrl+K)
 3. Build will be automatically triggered in another minute
@@ -133,7 +134,7 @@ Where do Jenkins store the war?
 -> It stores in our local machine itself inside .jenkins folder
 ```
 
-### How to enable notification in Jenkins: ###
+### How to enable notification in Jenkins:
 1. Go to Jenkins dashboard and select your pipeline
 2. Click configure
 3. Add another Post build action and select E-mail Notification
@@ -149,8 +150,8 @@ Where do Jenkins store the war?
 13. Save
 14. Now for every failed build, it will trigger the mail (you can find in the console itself)
 
-
-## ▶ Jenkins CI/CD Flow with Example using Declarative Approach - ___02 Mar 2024___
+<a name ="jenkins4"></a>
+# ▶ Jenkins CI/CD Flow with Example using Declarative Approach - ___02 Mar 2024___
 
 1. Last class we saw how to use UI to automate CI & CD
 2. Declarative approach is the best practice using script to automate the CI & CD
@@ -220,8 +221,8 @@ pipeline{
 }
 ```
 
-### You can click Pipeline Syntax for help in groovy: ###
--  Select checkout from version control > give details > Generate Pipeline script > Copy the code generated 
+### You can click Pipeline Syntax for help in groovy:
+- Select checkout from version control > give details > Generate Pipeline script > Copy the code generated 
 - Select Deploy war/ear to container > WAR/EAR: **/*.war ; Context path: jenkinsCiCd; Credentials : admin/**** ; Tomcat URL: http://localhost:9090 > Generate the pipeline script > Copy the code generated
 - Same process can be done for email as well
 
@@ -238,7 +239,8 @@ System > Extended Email Notification > Select always from a drop down menu
 2. Select Pipeline project and select OK
 3. Select Pipeline script from SCM
 
-## ▶ Docker Introduction & getting started with Docker | Installation guide - ___09 Mar 2024___
+<a name ="docker1"></a>
+# ▶ Docker Introduction & getting started with Docker | Installation guide - ___09 Mar 2024___
 
 - According to docker.com: Docker helps developers build, share, run, and verify applications anywhere — without tedious environment configuration or management.
 - Docker helps to build, run, deploy and verify your code
@@ -316,8 +318,8 @@ To overcome these issues, here comes DOCKER
 
 Installation guide: https://medium.com/@javatechie/docker-installation-steps-in-windows-mac-os-b749fdddf73a
 
-
-## ▶ Dockerize Spring Boot Application - Understand Workflow - ___16 Mar 2024___
+<a name ="docker2"></a>
+# ▶ Dockerize Spring Boot Application - Understand Workflow - ___16 Mar 2024___
 
 ### Dockerize your application steps
 <img src="assets/Dockerize App.PNG" alt="Dockerize your app" style="width: 50%;">
@@ -406,11 +408,11 @@ Rather doing the above steps, docker can create a clone of the existing image as
 
 *Docker Commands:* https://github.com/basanta-spring-boot/documents/blob/main/docker-README.md
 
-#### Assignment:
+### Assignment:
 Write a shell script/batch file which will create a folder called "logmon" in container on application startup and write all your application logs to that "logmon/application.log"
 
-
-## ▶ Dockerize Spring Boot Application using Google JIB - ___17 Mar 2024___
+<a name ="docker3"></a>
+# ▶ Dockerize Spring Boot Application using Google JIB - ___17 Mar 2024___
 
 - Google Cloud team designed a plugin for Java application: Google JIB
 - It will help us create Docker Image without us taking extra effort of writing Dockerfile, or instructing the information to Docker or without starting the Docker daemon
@@ -454,7 +456,8 @@ Create Image -> Run the container with that particular image
 4. Now run the image: ```docker run -d -p 9191:8282 spring-docker-practice:0.0.1-SNAPSHOT```
 5. To give a customized name: ```mvn spring-boot:build-image -Dspring-boot.build-image.imageName=spring-docker-app:v2```
 
-## ▶ What is Docker Hub & How to push Docker image to Hub? - ___23 Mar 2024___
+<a name ="docker4"></a>
+# ▶ What is Docker Hub & How to push Docker image to Hub? - ___23 Mar 2024___
 - Where Can i store Docker Image from where everyone can access? -> Docker Hub, AWS ECR, GitHub
 - **Docker Hub** is a registry to store your docker images
 
@@ -485,7 +488,7 @@ Create Image -> Run the container with that particular image
 * To use Kafka, we can use Docker Hub to pull the image: **bitnami/kafka** -> `docker pull bitnami/kafka`
 * To use MySQL, we can use Docker Hub to pull the image: **mysql** -> `docker pull mysql`
 
-#### Commands used today:
+### Commands used today:
 ```
 docker login
 
@@ -496,7 +499,7 @@ docker push javatechie/spring-docker:1.0
 docker pull javatechie/spring-docker:1.0
 ```
 
-* Next class will be:
+### Next class will be:
     * Earlier:
       * **CI:** BUILD, TEST, GENERATE WAR
       * **CD:** Deploy WAR to Tomcat
