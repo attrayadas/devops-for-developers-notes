@@ -11,6 +11,7 @@
 | 6   | [Dockerize Spring Boot Application - Understand Workflow](#docker2)                | 16 Mar, 2024 | Docker   |
 | 7   | [Dockerize Spring Boot Application using Google JIB](#docker3)                     | 17 Mar, 2024 | Docker   |
 | 8   | [What is Docker Hub & How to push Docker image to Hub?](#docker4)                  | 23 Mar, 2024 | Docker   |
+| 9   | [Jenkins CI/CD Build & Push Docker Images to Docker Hub](#jenkins5)                | 24 Mar, 2024 | Docker   |
 
 <a name ="jenkins1"></a>
 # ▶ Basic Introduction and Getting Started with Jenkins - ___18 Feb 2024___
@@ -507,3 +508,194 @@ docker pull javatechie/spring-docker:1.0
     * From now on:
       * **CI:** BUILD, TEST, Build docker image
       * **CD:** Docker login, tag image, Push/Deploy image to Hub
+
+<a name ="jenkins5"></a>
+# ▶ Jenkins CI/CD Build & Push Docker Images to Docker Hub - ___24 Mar 2024___
+
+* Earlier: code -> GitHub -> Jenkins (CI) [Compile -> Test ->Build] -> (CD)Generate WAR -> Deploy to Tomcat -> Send email
+* In real time, we need to play with containerization:
+  code -> GitHub -> Jenkins (CI) [Compile -> Test -> Build] -> (CD)Create Docker Image -> Push that image to Docker Hub -> receive mail notification
+  <img src="assets/CI-CD using Docker.PNG" alt="ci cd" style="width: 60%;">
+
+### For CD flow we need to:
+1. Create Dockerfile
+2. Build Docker image using command (using Docker build)
+3. Push Docker image to DockerHub :Docker login, Tag your image & push
+
+#### Steps:
+1. Create Dockerfile
+```
+FROM openjdk:17
+WORKDIR /appContainer
+COPY target/jenkinsCiCd.jar /appContainer
+EXPOSE 8282
+CMD ["java", "-jar", "jenkinsCiCd.jar"]
+```
+
+2. Do mvn clean install (In target, you can find the jar file)
+3. Login to Jenkins: Go to the groovy script.
+4. CI steps will remain same as before: SCM checkout and Build Process
+5. Remove step: Deploy to container (which deploy to the tomcat server)
+6. We just need to configure the CD part
+7. Replace "Deploy to container" step with:
+```
+stage("Build Docker Image"){
+            steps{
+                script{
+                    bat 'docker build -t attrayadas/spring-cicd-docker:1.0 .'
+                }
+            }
+        }
+```
+
+4. Jenkins needs some plugin: Dashboard > Manage Jenkins > Plugins > Available Plugins > Search for "Docker" > Select *Docker, Docker Commons, Docker Pipeline, Docker API, docker-build-step, CloudBees Docker Build and Publish* and install them
+5. Select *Restart Jenkins when installation is complete and no jobs are running*
+6. Commit the changes (adding Dockerfile) to GitHub and Build it using Jenkins
+```
+pipeline {
+    agent any
+    tools{
+        maven "maven"
+    }
+    stages{
+        stage("SCM checkout"){
+            steps{
+                checkout scmGit(branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/attrayadas/jenkins-ci-cd-demo.git']])
+            }
+        }
+
+        stage("Build Process"){
+            steps{
+                script{
+                    bat 'mvn clean install'
+                }
+            }
+        }
+        stage("Build Docker Image"){
+            steps{
+                script{
+                    bat 'docker build -t attrayadas/spring-cicd-docker:1.0 .'
+                }
+            }
+        }
+    }
+}
+```
+7. You will find the docker image in the Docker Desktop
+8. Now let's push to Docker Hub.
+9. Add another step: Push to DockerHub and click on *Pipeline Syntax*
+10. Select *withCredentials: Bind credentials to variables* > Select *Secret text* in Bindings option > Add name in variable "docker-credentials" > Add credentials - Jenkins > Select Kind - Secret text > Now need to add password in *Secret* (You can add token also from Docker Desktop) > *Generate Pipeline Script* >
+11. The new stage to push the image to DockerHub would be:
+```
+stage("Deploy Image to DockerHub"){
+            steps{
+                withCredentials([string(credentialsId: 'docker-credential', variable: 'docker-credential')]) {
+                    bat 'docker login -u attrayadas -p {%docker-credential}'
+                    bat 'docker push attrayadas/spring-cicd-docker:1.0'
+                }   
+            }
+        }
+```
+12. Now, you will find the image in the Docker Hub
+
+### But now, everytime we push some changes, new docker images will be created using version 2.0. But we need to make it dynamic
+#### We have to define the environment:
+1. In the script, add these environments:
+```
+ environment{
+            APP_NAME = "spring-docker-cicd"
+            RELEASE_NO = "1.0.0"
+            DOCKER_USER = "attrayadas"
+            IMAGE_NAME = "${DOCKR_USER}"+"/"+"${APP_NAME}"
+            IMAGE_TAG = "${RELEASE_NO}-${BUILD_NUMBER}"  // Build number is inbuilt
+        }
+```
+2. Now we need to change the respective stages:
+```
+ stage("Build Docker Image"){
+            steps{
+                script{
+                    bat "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ."
+                }
+            }
+        }
+        stage("Deploy Image to DockerHub"){
+            steps{
+                withCredentials([string(credentialsId: 'docker-password', variable: 'docker-password')]) {
+                    bat 'docker login -u attrayadas -p ${docker-password}'
+                    bat "docker push ${IMAGE_NAME}:${IMAGE_TAG}"
+                }   
+            }
+        }
+```
+3. Build it now
+
+
+### Full Script from the class:
+```
+pipeline{
+
+    agent any
+    tools{
+        maven "maven"
+    }
+
+    environment{
+           APP_NAME = "spring-docker-cicd"
+           RELEASE_NO= "1.0.0"
+           DOCKER_USER= "javatechie4u"
+           IMAGE_NAME= "${DOCKER_USER}"+"/"+"${APP_NAME}"
+           IMAGE_TAG= "${RELEASE_NO}-${BUILD_NUMBER}"
+    }
+
+    stages{
+
+        stage("SCM checkout"){
+            steps{
+                checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/javatechie-devops/jenkins-ci-cd.git']])
+            }
+        }
+
+        stage("Build Process"){
+            steps{
+                script{
+                    sh 'mvn clean install'
+                }
+            }
+        }
+
+        stage("Build Image"){
+            steps{
+                script{
+                    sh 'docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .'
+                }
+            }
+        }
+
+        stage("Deploy Image to Hub"){
+            steps{
+                withCredentials([string(credentialsId: 'dp', variable: 'dp')]) {
+                 sh 'docker login -u javatechie4u -p ${dp}'
+                 sh 'docker push ${IMAGE_NAME}:${IMAGE_TAG}'
+                }
+            }
+        }
+
+
+    }
+
+    post{
+        always{
+            emailext attachLog: true,
+            body: ''' <html>
+    <body>
+        <p>Build Status: ${BUILD_STATUS}</p>
+        <p>Build Number: ${BUILD_NUMBER}</p>
+        <p>Check the <a href="${BUILD_URL}">console output</a>.</p>
+    </body>
+</html>''', mimeType: 'text/html', replyTo: 'javatechie.learning@gmail.com', subject: 'Pipeline Status : ${BUILD_NUMBER}', to: 'javatechie.learning@gmail.com'
+
+        }
+    }
+}
+```
