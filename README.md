@@ -1,17 +1,18 @@
 # 📚 Devops for Developers Notes - Java Techie #
 
 ## Index:
-| No. | Session                                                                            | Date         | Category |
-|-----|------------------------------------------------------------------------------------|--------------|----------|
-| 1   | [Basic Introduction and Getting Started with Jenkins](#jenkins1)                   | 18 Feb, 2024 | Jenkins  |
-| 2   | [Jenkins Installation Guide for Windows and Mac](#jenkins2)                        | 24 Feb, 2024 | Jenkins  |
-| 3   | [Jenkins CI/CD Flow with Example using Configuration Approach](#jenkins3)          | 25 Feb, 2024 | Jenkins  |
-| 4   | [Jenkins CI/CD Flow with Example using Declarative Approach](#jenkins4)            | 02 Mar, 2024 | Jenkins  |
-| 5   | [Docker Introduction & getting started with Docker - Installation guide](#docker1) | 09 Mar, 2024 | Docker   |
-| 6   | [Dockerize Spring Boot Application - Understand Workflow](#docker2)                | 16 Mar, 2024 | Docker   |
-| 7   | [Dockerize Spring Boot Application using Google JIB](#docker3)                     | 17 Mar, 2024 | Docker   |
-| 8   | [What is Docker Hub & How to push Docker image to Hub?](#docker4)                  | 23 Mar, 2024 | Docker   |
-| 9   | [Jenkins CI/CD Build & Push Docker Images to Docker Hub](#jenkins5)                | 24 Mar, 2024 | Docker   |
+| No. | Session                                                                                 | Date         | Category |
+|-----|-----------------------------------------------------------------------------------------|--------------|----------|
+| 1   | [Basic Introduction and Getting Started with Jenkins](#jenkins1)                        | 18 Feb, 2024 | Jenkins  |
+| 2   | [Jenkins Installation Guide for Windows and Mac](#jenkins2)                             | 24 Feb, 2024 | Jenkins  |
+| 3   | [Jenkins CI/CD Flow with Example using Configuration Approach](#jenkins3)               | 25 Feb, 2024 | Jenkins  |
+| 4   | [Jenkins CI/CD Flow with Example using Declarative Approach](#jenkins4)                 | 02 Mar, 2024 | Jenkins  |
+| 5   | [Docker Introduction & getting started with Docker - Installation guide](#docker1)      | 09 Mar, 2024 | Docker   |
+| 6   | [Dockerize Spring Boot Application - Understand Workflow](#docker2)                     | 16 Mar, 2024 | Docker   |
+| 7   | [Dockerize Spring Boot Application using Google JIB](#docker3)                          | 17 Mar, 2024 | Docker   |
+| 8   | [What is Docker Hub & How to push Docker image to Hub?](#docker4)                       | 23 Mar, 2024 | Docker   |
+| 9   | [Jenkins CI/CD Build & Push Docker Images to Docker Hub](#jenkins5)                     | 24 Mar, 2024 | Jenkins  |
+| 10  | [Dockerize Spring Boot CRUD Application with MySQL DB using Docker-compose](#docker5)   | 30 Mar, 2024 | Docker   |
 
 <a name ="jenkins1"></a>
 # ▶ Basic Introduction and Getting Started with Jenkins - ___18 Feb 2024___
@@ -699,3 +700,70 @@ pipeline{
     }
 }
 ```
+
+<a name ="docker5"></a>
+# ▶ Dockerize Spring Boot CRUD Application with MySQL DB using Docker-compose - ___30 Mar 2024___
+
+### Requirement:
+<img src="assets/docker-compose.PNG" alt="docker-compose" style="width: 60%;">
+
+- We will be having two applications: SpringBoot App and MySQL DB
+- We want both to run in two containers
+
+<img src="assets/docker-compose-port.PNG" alt="docker-compose-port" style="width: 60%;">
+
+### Steps:
+1. Create a CRUD Application with MySQL
+2. Create Dockerfile:
+```
+FROM openjdk:17
+WORKDIR /myApp
+COPY target/transaction-service.jar /myApp
+EXPOSE 8181
+CMD ["java", "-jar", "transaction-service.jar"]
+``` 
+3. Create docker-compose.yaml
+```
+version: '3.8'
+
+services:
+	mysql-db:
+		image: 'mysql:latest'
+		environment:
+			MYSQL_ROOT_PASSWORD: root1234
+			MYSQL_DATABASE: transactiondb
+		ports:
+			- '3307:3306'
+
+	application:
+		build:
+			context: .
+			dockerfile: Dockerfile
+		image: transaction-service:1.0
+		depends_on:
+			- mysql-db
+		ports:
+			- '9090:8181'
+		environment:
+			SPRING_DATASOURCE_URL: 'jdbc:mysql://mysql-db:3306/transactiondb'
+			SPRING_DATASOURCE_USERNAME: root
+			SPRING_DATASOURCE_PASSWORD: root1234
+```
+4. Comment the datasource url, username, password from application.properties in our application
+5. Build the application: mvn clean install -DskipTests (otherwise it will try to make a db connection)
+6. After build is successful, open another terminal: `docker-compose up -d` (make sure to start docker desktop in your local)
+   <img src="assets/docker-compose up -d command.PNG" alt="docker-compose up -d command" style="width: 60%;">
+7. You will find the image and container. In container, you will under 'some name'
+   <img src="assets/docker compose container.PNG" alt="docker compose container" style="width: 60%;">
+8. Now send request to the container port that's tunneled to application port
+9. Add a connection to Dbeaver with MySQL 3307 port, and you will find the new database there
+10. To check in the terminal:
+    1. cmd: `docker ps`
+    2. Open the mysql using bash: `docker exec -it <container id> bash`
+    3. `bash-4.4# mysql -u root -p `
+    4. Enter password
+    5. cmd: `mysql> use transactiondb`
+    6. cmd: `mysql> select * from Payment;` and you will find all the data
+
+### Assignment:
+Configure Kafka in your Spring Boot Application
