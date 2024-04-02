@@ -1,18 +1,19 @@
 # 📚 Devops for Developers Notes - Java Techie #
 
 ## Index:
-| No. | Session                                                                                 | Date         | Category |
-|-----|-----------------------------------------------------------------------------------------|--------------|----------|
-| 1   | [Basic Introduction and Getting Started with Jenkins](#jenkins1)                        | 18 Feb, 2024 | Jenkins  |
-| 2   | [Jenkins Installation Guide for Windows and Mac](#jenkins2)                             | 24 Feb, 2024 | Jenkins  |
-| 3   | [Jenkins CI/CD Flow with Example using Configuration Approach](#jenkins3)               | 25 Feb, 2024 | Jenkins  |
-| 4   | [Jenkins CI/CD Flow with Example using Declarative Approach](#jenkins4)                 | 02 Mar, 2024 | Jenkins  |
-| 5   | [Docker Introduction & getting started with Docker - Installation guide](#docker1)      | 09 Mar, 2024 | Docker   |
-| 6   | [Dockerize Spring Boot Application - Understand Workflow](#docker2)                     | 16 Mar, 2024 | Docker   |
-| 7   | [Dockerize Spring Boot Application using Google JIB](#docker3)                          | 17 Mar, 2024 | Docker   |
-| 8   | [What is Docker Hub & How to push Docker image to Hub?](#docker4)                       | 23 Mar, 2024 | Docker   |
-| 9   | [Jenkins CI/CD Build & Push Docker Images to Docker Hub](#jenkins5)                     | 24 Mar, 2024 | Jenkins  |
-| 10  | [Dockerize Spring Boot CRUD Application with MySQL DB using Docker-compose](#docker5)   | 30 Mar, 2024 | Docker   |
+| No. | Session                                                                            | Date         | Category |
+|-----|------------------------------------------------------------------------------------|--------------|----------|
+| 1   | [Basic Introduction and Getting Started with Jenkins](#jenkins1)                   | 18 Feb, 2024 | Jenkins  |
+| 2   | [Jenkins Installation Guide for Windows and Mac](#jenkins2)                        | 24 Feb, 2024 | Jenkins  |
+| 3   | [Jenkins CI/CD Flow with Example using Configuration Approach](#jenkins3)          | 25 Feb, 2024 | Jenkins  |
+| 4   | [Jenkins CI/CD Flow with Example using Declarative Approach](#jenkins4)            | 02 Mar, 2024 | Jenkins  |
+| 5   | [Docker Introduction & getting started with Docker - Installation guide](#docker1) | 09 Mar, 2024 | Docker   |
+| 6   | [Dockerize Spring Boot Application - Understand Workflow](#docker2)                | 16 Mar, 2024 | Docker   |
+| 7   | [Dockerize Spring Boot Application using Google JIB](#docker3)                     | 17 Mar, 2024 | Docker   |
+| 8   | [What is Docker Hub & How to push Docker image to Hub?](#docker4)                  | 23 Mar, 2024 | Docker   |
+| 9   | [Jenkins CI/CD Build & Push Docker Images to Docker Hub](#jenkins5)                | 24 Mar, 2024 | Jenkins  |
+| 10  | [Dockerize Spring Boot CRUD Application with MySQL using Docker-compose](#docker5) | 30 Mar, 2024 | Docker   |
+| 11  | [Docker Volume](#docker6)                                                          | 31 Mar, 2024 | Docker   |
 
 <a name ="jenkins1"></a>
 # ▶ Basic Introduction and Getting Started with Jenkins - ___18 Feb 2024___
@@ -767,3 +768,34 @@ services:
 
 ### Assignment:
 Configure Kafka in your Spring Boot Application
+
+<a name ="docker6"></a>
+# ▶ Docker Volume - ___31 Mar 2024___
+
+- Last class we ran two containers: application, database. They both connected with each other to perform database operation
+- What if my DB container is stopped, then we will not be able to fetch data from DB (data will be lost from container)
+- How to recover the data? Keep backup
+- How to avoid data-loss in container: We have Docker Volume
+
+### Steps:
+1. Start the both containers: `docker-compose up -d`
+2. Add data to the database through the REST Api
+3. Restart both the containers, data will still be there. But from where did it fetch? (MySQL will create a default anonymous volume)
+4. How to create your own volume?
+5. Add these:
+```
+volumes:
+	- mysql-backup:/var/lib/mysql
+
+...
+
+volumes:
+	mysql-backup:
+```
+6. Now cmd: `docker-compose up -d`
+7. Now you will see `volume "transaction-service_mysql-backup	Created`
+<img src="assets/docker-volume-created.PNG" alt="docker-volume-created" style="width: 45%;">
+8. Now even if we delete the container, data will be fetched from the volume created
+9. In the Docker Desktop, Goto Volumes and click on `transaction-service_mysql-backup`
+10. Go to path: transactiondb > Payment.ibd, and save the file
+11. Goto filext.com/online-file-viewer.html and use the ibd file to see the datas
