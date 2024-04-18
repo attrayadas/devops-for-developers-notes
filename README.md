@@ -1,19 +1,20 @@
 # 📚 Devops for Developers Notes - Java Techie #
 
 ## Index:
-| No. | Session                                                                            | Date         | Category |
-|-----|------------------------------------------------------------------------------------|--------------|----------|
-| 1   | [Basic Introduction and Getting Started with Jenkins](#jenkins1)                   | 18 Feb, 2024 | Jenkins  |
-| 2   | [Jenkins Installation Guide for Windows and Mac](#jenkins2)                        | 24 Feb, 2024 | Jenkins  |
-| 3   | [Jenkins CI/CD Flow with Example using Configuration Approach](#jenkins3)          | 25 Feb, 2024 | Jenkins  |
-| 4   | [Jenkins CI/CD Flow with Example using Declarative Approach](#jenkins4)            | 02 Mar, 2024 | Jenkins  |
-| 5   | [Docker Introduction & getting started with Docker - Installation guide](#docker1) | 09 Mar, 2024 | Docker   |
-| 6   | [Dockerize Spring Boot Application - Understand Workflow](#docker2)                | 16 Mar, 2024 | Docker   |
-| 7   | [Dockerize Spring Boot Application using Google JIB](#docker3)                     | 17 Mar, 2024 | Docker   |
-| 8   | [What is Docker Hub & How to push Docker image to Hub?](#docker4)                  | 23 Mar, 2024 | Docker   |
-| 9   | [Jenkins CI/CD Build & Push Docker Images to Docker Hub](#jenkins5)                | 24 Mar, 2024 | Jenkins  |
-| 10  | [Dockerize Spring Boot CRUD Application with MySQL using Docker-compose](#docker5) | 30 Mar, 2024 | Docker   |
-| 11  | [Docker Volume](#docker6)                                                          | 31 Mar, 2024 | Docker   |
+| No. | Session                                                                            | Date         | Category   |
+|-----|------------------------------------------------------------------------------------|--------------|------------|
+| 1   | [Basic Introduction and Getting Started with Jenkins](#jenkins1)                   | 18 Feb, 2024 | Jenkins    |
+| 2   | [Jenkins Installation Guide for Windows and Mac](#jenkins2)                        | 24 Feb, 2024 | Jenkins    |
+| 3   | [Jenkins CI/CD Flow with Example using Configuration Approach](#jenkins3)          | 25 Feb, 2024 | Jenkins    |
+| 4   | [Jenkins CI/CD Flow with Example using Declarative Approach](#jenkins4)            | 02 Mar, 2024 | Jenkins    |
+| 5   | [Docker Introduction & getting started with Docker - Installation guide](#docker1) | 09 Mar, 2024 | Docker     |
+| 6   | [Dockerize Spring Boot Application - Understand Workflow](#docker2)                | 16 Mar, 2024 | Docker     |
+| 7   | [Dockerize Spring Boot Application using Google JIB](#docker3)                     | 17 Mar, 2024 | Docker     |
+| 8   | [What is Docker Hub & How to push Docker image to Hub?](#docker4)                  | 23 Mar, 2024 | Docker     |
+| 9   | [Jenkins CI/CD Build & Push Docker Images to Docker Hub](#jenkins5)                | 24 Mar, 2024 | Jenkins    |
+| 10  | [Dockerize Spring Boot CRUD Application with MySQL using Docker-compose](#docker5) | 30 Mar, 2024 | Docker     |
+| 11  | [Docker Volume](#docker6)                                                          | 31 Mar, 2024 | Docker     |
+| 12  | [Basic introduction and getting started with Kubernetes](#kubernetes1)             | 14 Apr, 2024 | Kubernetes |
 
 <a name ="jenkins1"></a>
 # ▶ Basic Introduction and Getting Started with Jenkins - ___18 Feb 2024___
@@ -799,3 +800,43 @@ volumes:
 9. In the Docker Desktop, Goto Volumes and click on `transaction-service_mysql-backup`
 10. Go to path: transactiondb > Payment.ibd, and save the file
 11. Goto filext.com/online-file-viewer.html and use the ibd file to see the datas
+
+
+<a name ="kubernetes1"></a>
+# ▶ Basic introduction and getting started with Kubernetes - ___14 Apr 2024___
+
+### Agenda:
+1. What is Kubernetes?
+2. Why Kubernetes?
+3. Features of Kubernetes
+4. Installation guide
+
+### What is Kubernetes (K8S)?
+- Earlier the application was designed with Monolithic Architecture
+- We cannot scale individual feature of a monolithic architecture
+- Then we migrated to Microservices where each feature have its own service, and each service will have its own Database
+- When our services are deployed to multiple Docker containers, the number of containers will be changing as per the load
+- These creating/stopping containers are done manually
+- If I want these containers to be managed by someone who can increase/decrease the count of container, we need **Kubernetes**.
+  <img src="assets/Kubernetes1.PNG" alt="kubernetes-1" style="width: 60%;">
+- **Auto-scaling is the main feature of Kubernetes**
+-  Kubernetes is an open-source container-orchestration engine or container management tool, it automates deploying, scaling, and managing containerized application.
+- It schedules, runs and manages isolated containers which are running on virtual/physical/cloud machine
+- Google (2024)—Cloud Native Computing Foundation (CNCF)
+- Developed with GoLang
+  <img src="assets/Kubernetes2.PNG" alt="kubernetes-2" style="width: 60%;">
+
+### Features of Kubernetes:
+1. Auto Scaling
+2. Auto Healing
+3. Load Balancing
+4. Scheduling
+5. Fault Tolerance
+6. Rollback
+7. Batch Execution
+8. Health Monitoring
+
+ 
+### Kubernetes Installation Guide:
+- https://medium.com/@javatechie/kubernetes-installation-guide-windows-mac-f65105146127
+- For Mac users: https://medium.com/@javatechie/kubernetes-tutorial-install-run-minikube-in-mac-os-k8s-cluster-369b25b0c3f0
