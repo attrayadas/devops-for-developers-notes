@@ -855,7 +855,7 @@ volumes:
 7. Secrets
 8. Config Map
 9. ETCD </br>
-<img src="assets/KubernetesComponent1.PNG" alt="kubernetes component-1" style="width: 60%;">
+<img src="assets/KubernetesComponent1.png" alt="kubernetes component-1" style="width: 60%;">
 
 #### 1. Pods, Nodes & Cluster
 <img src="assets/KubernetesComponent2.PNG" alt="kubernetes component-2" style="width: 60%;">
@@ -885,7 +885,7 @@ volumes:
     2. Worker Node (Minion)</br>
 <img src="assets/KubernetesComponent9.PNG" alt="kubernetes component-9" style="width: 60%;">
 
-<img src="assets/KubernetesComponent10.PNG" alt="kubernetes component-10" style="width: 60%;">
+<img src="assets/KubernetesComponent10.png" alt="kubernetes component-10" style="width: 60%;">
 
 #### Master Node:
 - API Server: This is like the central command center. It receives all the commands and requests from users, other systems, and components within the cluster.
