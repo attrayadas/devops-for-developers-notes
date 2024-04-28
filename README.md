@@ -885,7 +885,7 @@ volumes:
     2. Worker Node (Minion)</br>
 <img src="assets/KubernetesComponent9.PNG" alt="kubernetes component-9" style="width: 60%;">
 
-<img src="assets/KubernetesComponent10.png" alt="kubernetes component-10" style="width: 60%;">
+<img src="assets/KubernetesComponent10.png" alt="kubernetes component-10" style="width: 75%;">
 
 #### Master Node:
 - API Server: This is like the central command center. It receives all the commands and requests from users, other systems, and components within the cluster.
