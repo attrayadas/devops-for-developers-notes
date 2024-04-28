@@ -15,6 +15,7 @@
 | 10  | [Dockerize Spring Boot CRUD Application with MySQL using Docker-compose](#docker5) | 30 Mar, 2024 | Docker     |
 | 11  | [Docker Volume](#docker6)                                                          | 31 Mar, 2024 | Docker     |
 | 12  | [Basic introduction and getting started with Kubernetes](#kubernetes1)             | 14 Apr, 2024 | Kubernetes |
+| 13  | [Understand K8s Components & Architecture](#kubernetes2)                           | 20 Apr, 2024 | Kubernetes |
 
 <a name ="jenkins1"></a>
 # ▶ Basic Introduction and Getting Started with Jenkins - ___18 Feb 2024___
@@ -840,3 +841,57 @@ volumes:
 ### Kubernetes Installation Guide:
 - https://medium.com/@javatechie/kubernetes-installation-guide-windows-mac-f65105146127
 - For Mac users: https://medium.com/@javatechie/kubernetes-tutorial-install-run-minikube-in-mac-os-k8s-cluster-369b25b0c3f0
+
+<a name ="kubernetes2"></a>
+# ▶ Understand K8s Components & Architecture - ___20 Apr 2024___
+
+### K8s Components
+1. Pods
+2. Nodes
+3. Cluster
+4. Replication Controller Replica Set
+5. Service
+6. Deployment
+7. Secrets
+8. Config Map
+9. ETCD </br>
+<img src="assets/KubernetesComponent1.PNG" alt="kubernetes component-1" style="width: 60%;">
+
+#### 1. Pods, Nodes & Cluster
+<img src="assets/KubernetesComponent2.PNG" alt="kubernetes component-2" style="width: 60%;">
+<img src="assets/KubernetesComponent3.PNG" alt="kubernetes component-3" style="width: 60%;">
+<img src="assets/KubernetesComponent4.PNG" alt="kubernetes component-4" style="width: 60%;">
+
+#### 2. Replication Controller Replica Set
+<img src="assets/KubernetesComponent5.PNG" alt="kubernetes component-5" style="width: 60%;">
+
+#### 3. Service
+- Service helps to expose your application outside to the pod using DNS Static IP
+- Service will also take care of load balancing</br>
+<img src="assets/KubernetesComponent6.PNG" alt="kubernetes component-6" style="width: 60%;">
+
+#### 4. Deployment
+<img src="assets/KubernetesComponent7.PNG" alt="kubernetes component-7" style="width: 60%;">
+
+#### 5. Secret & Config Map
+<img src="assets/KubernetesComponent8.PNG" alt="kubernetes component-8" style="width: 60%;">
+
+#### 6. ETCD
+- It's a key-value pair database that stores the status of cluster, node and pod
+
+### Kubernetes Architecture
+- To create a Kubernetes cluster, we need minimum two nodes:
+    1. Master (Control Plane)
+    2. Worker Node (Minion)</br>
+<img src="assets/KubernetesComponent9.PNG" alt="kubernetes component-9" style="width: 60%;">
+
+<img src="assets/KubernetesComponent10.PNG" alt="kubernetes component-10" style="width: 60%;">
+
+#### Master Node:
+- API Server: This is like the central command center. It receives all the commands and requests from users, other systems, and components within the cluster.
+- Controller Manager: Think of this as the taskmaster. It constantly watches over the cluster's state and ensures that everything is working as it should. If something goes wrong, it takes corrective action.
+- Scheduler: This is like a matchmaker. It assigns workloads (containers) to the worker nodes based on resource availability and other constraints.
+- etcd: This is like the memory bank. It stores all the cluster's configuration data and state information. It's crucial for maintaining consistency and reliability.
+#### Worker Node:
+- Kubelet: This is like the loyal servant. It takes orders from the master node and makes sure that containers are running as expected on its node
+- Kube Proxy: This is like the traffic cop. It handles network communication between the pods (containers) and the outside world, as well as between pods within the cluster.
