@@ -16,6 +16,7 @@
 | 11  | [Docker Volume](#docker6)                                                          | 31 Mar, 2024 | Docker     |
 | 12  | [Basic introduction and getting started with Kubernetes](#kubernetes1)             | 14 Apr, 2024 | Kubernetes |
 | 13  | [Understand K8s Components & Architecture](#kubernetes2)                           | 20 Apr, 2024 | Kubernetes |
+| 18  | [Basic Introduction and getting started with AWS](#aws1)                           | 12 May, 2024 | AWS        |
 
 <a name ="jenkins1"></a>
 # ▶ Basic Introduction and Getting Started with Jenkins - ___18 Feb 2024___
@@ -895,3 +896,30 @@ volumes:
 #### Worker Node:
 - Kubelet: This is like the loyal servant. It takes orders from the master node and makes sure that containers are running as expected on its node
 - Kube Proxy: This is like the traffic cop. It handles network communication between the pods (containers) and the outside world, as well as between pods within the cluster.
+
+<a name ="aws1"></a>
+# ▶ Basic Introduction and getting started with AWS - ___12 May 2024___
+
+### Challenges before AWS
+- If I want to launch my own website
+    1. I need a dedicated server, operating server (licensed)
+    2. Need to install required software like DB, storage, messaging system
+    3. I need to take care of the network related stuff (routing, gateway)
+    4. Since I purchased server, I need employees to maintain it
+- The cost can get significantly high and all need to be maintained by myself. This will be the capital expenditure
+- The cost can go significantly high if scaling requires
+
+### Public Cloud Provider:
+1. AWS
+2. Azure
+3. GCP
+
+### Different types of Cloud Provider
+1. **Infrastructure as a Service (IaaS)** --> eg: AWS (Offers complete infrastructure in one go)
+2. **Platform as a Service (PaaS)**  --> eg: Heroku
+3. **Software as a Service (SaaS)** --> eg: Google Drive, Dropbox
+
+AWS free tier account creation: https://medium.com/@javatechie/create-an-aws-free-tier-account-e9993a597204
+
+- After signing up, make sure to select the region nearer to you
+- EC2 means a server/virtual machine provided by AWS
