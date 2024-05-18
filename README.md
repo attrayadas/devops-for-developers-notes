@@ -17,6 +17,7 @@
 | 12  | [Basic introduction and getting started with Kubernetes](#kubernetes1)             | 14 Apr, 2024 | Kubernetes |
 | 13  | [Understand K8s Components & Architecture](#kubernetes2)                           | 20 Apr, 2024 | Kubernetes |
 | 18  | [Basic Introduction and getting started with AWS](#aws1)                           | 12 May, 2024 | AWS        |
+| 19  | [Create EC2 Instance & Run your Spring Boot Application](#aws2)                    | 18 May, 2024 | AWS        |
 
 <a name ="jenkins1"></a>
 # ▶ Basic Introduction and Getting Started with Jenkins - ___18 Feb 2024___
@@ -923,3 +924,29 @@ AWS free tier account creation: https://medium.com/@javatechie/create-an-aws-fre
 
 - After signing up, make sure to select the region nearer to you
 - EC2 means a server/virtual machine provided by AWS
+
+<a name ="aws2"></a>
+# ▶ Create EC2 Instance & Run your Spring Boot Application - ___18 May 2024___
+
+### Creating EC2 Instance:
+1. Go to EC2
+2. Select Launch an Instance
+3. Give a name >  Select OS type and architecture
+4. Select Instance type(t2.micro)
+5. Select Key pair (login) ->to access a remote from my local I need a private key (give a key pair name, select RSA)
+6. Allow SSH from anywhere
+7. Select number of instance to be created
+8. Click on **Launch Instance**
+
+1. Select the instance you want to connect to, and click on Connect
+2. In the directory having the pem file, cmd: `ssh -i "devops-demo.pem"...`
+3. Once logged in, you can use the cmd: `whoami` to see the user
+4. To install java in the server: `sudo yum install -y java-17-amazon-corretto-headless.x86_64`
+5. Create a jar file of the java application using `maven clean install`
+6. To copy the jar to the server, use cmd: `scp -i devops-demo.pem /Users/javatechie/Desktop/Devops4Developers/aws-demo/target/spring-app.jar ec2-user@ec2-13-201-27-120.ap-south-1.compute.amazonaws.com:/home/ec2-user/`
+7. To run the application: `<missing java command>`
+8. To be able to access the endpoint: open the instance > security >
+
+Region: (Mumbai)
+-> VPC (Virtual Private Cloud) => 5
+1 VPC will have 200 subnet
